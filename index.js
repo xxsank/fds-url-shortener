@@ -15,7 +15,8 @@ app.use('/static', express.static('public'))
 app.use(morgan('dev'))
 
 app.get('/',(req,res) =>{
-  res.render('index.ejs',{urls})
+  const host = req.get('host')
+  res.render('index.ejs',{host,urls})
 })
 
 app.get('/:slug', (req,res) => {
