@@ -1,8 +1,10 @@
 const express = require('express')
 const morgan = require('morgan')
-const randomstring = require('randomstring');
+const randomstring = require('randomstring')
+const bodyParser = require('body-parser')
 
 const app = express()
+app.use(bodyParser.urlencoded({ extended: false }))
 
 const urls = [
   {
@@ -19,6 +21,19 @@ app.get('/',(req,res) =>{
   res.render('index.ejs',{host,urls})
 })
 
+app.get('/new',(req,res) => {
+  res.render('new.ejs')
+})
+
+app.post('/new', (req,res) => {
+  const urlItem ={
+    longUrl: req.body.longUrl,
+    slug: randomstring.generate(8)
+  }
+  urls.push(urlItem);
+  res.redirect('/')
+})
+
 app.get('/:slug', (req,res) => {
   const urlItem = urls.find(item => item.slug === req.params.slug)
   if(urlItem){
@@ -28,6 +43,9 @@ app.get('/:slug', (req,res) => {
     res.send('404 NOT FOUND')
   }
 })
+
+
+
 
 app.listen(3000, () => {
   console.log('listening...')
