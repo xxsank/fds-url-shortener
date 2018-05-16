@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const express = require('express')
 const morgan = require('morgan')
 const randomstring = require('randomstring')
@@ -22,7 +24,12 @@ app.get('/',(req,res) =>{
 })
 
 app.get('/new',(req,res) => {
-  res.render('new.ejs')
+  if (req.query.secret === process.env.SECRET){
+    res.render('new.ejs')
+  }else {
+    res.status(403)
+    res.send('403 Forbidden')
+  }
 })
 
 app.post('/new', (req,res) => {
